@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Collections.Repository\Collections.Repository.csproj" />
+    <ProjectReference Include="..\Collections.Utilities\Collections.Utilities.csproj" />
   </ItemGroup>
 
 </Project>
