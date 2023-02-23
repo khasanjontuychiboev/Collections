@@ -2,6 +2,7 @@ using Collections.Models;
 using Collections.Repository;
 using Collections.Repository.Implementation;
 using Collections.Repository.Interfaces;
+using Collections.Services;
 using Collections.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,8 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
 
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<IApplicationUserService, ApplicationUserService>();
+builder.Services.AddTransient<IApplicationRoleService, ApplicationRoleService>();
 
 var app = builder.Build();
 

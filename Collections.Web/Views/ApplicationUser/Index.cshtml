@@ -1,0 +1,17 @@
+﻿@using Collections.Utilities
+@model PagedResult<Collections.ViewModel.ApplicationUserViewModel>
+
+@foreach (var item in Model.Data)
+{
+    <p>@item.UserName</p>
+    <p>@item.Email</p>
+    @if (item.ApplicationRoleViewModels != null)
+    {
+        foreach (var role in item.ApplicationRoleViewModels)
+        {
+            <button class="btn btn-sm btn-success">@role.Name</button>
+        }
+    }
+
+    <hr />
+}
