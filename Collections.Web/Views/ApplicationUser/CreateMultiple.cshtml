@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Collections.ViewModel.ApplicationUserViewModel>
+
+<form method="post" asp-controller="ApplicationUser" asp-action="CreateMultiple">
+    @foreach (var item in Model)
+    {
+        <label asp-for="@item.Email"> Email:</label>
+        <input type="email" asp-for="@item.Email" />
+        <label asp-for="@item.Password"> Password:</label>
+        <input type="password" asp-for="@item.Password" />
+
+        <label asp-for="@item.Roles"></label>
+        <select multiple="multiple" class="multi-select" asp-for="@item.Roles" asp-items="ViewBag.Roles">
+        </select>
+
+
+        <hr />
+    }
+    <button type="submit">Submit</button>
+</form>
+
+

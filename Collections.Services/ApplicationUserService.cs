@@ -17,6 +17,8 @@ namespace Collections.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IApplicationRoleService _applicationRoleService;
+        private readonly IUserStore<ApplicationUser> _userStore;
+        private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private ApplicationDbContext _context;
 
 
@@ -86,7 +88,7 @@ namespace Collections.Services
         public ApplicationUserViewModel GetById(string Id)
         {
             var model = _context.ApplicationUsers.Find(Id);
-            var vm = new ApplicationUserViewModel(model, GetApplicationUserRoles(model));
+            var vm = new ApplicationUserViewModel(model, _userManager.GetRolesAsync(model).Result.ToList());
             return vm;
 
         }
@@ -94,11 +96,40 @@ namespace Collections.Services
         public void Insert(ApplicationUserViewModel applicationUserViewModel)
         {
             var model = new ApplicationUserViewModel().ConvertViewModel(applicationUserViewModel);
-            _userManager.CreateAsync(model);
-            foreach (var item in applicationUserViewModel.ApplicationRoleViewModels)
+            
+            _userManager.CreateAsync(model, applicationUserViewModel.Password).GetAwaiter().GetResult();
+            var Appuser = _context.ApplicationUsers.FirstOrDefault(x => x.Email == model.Email);
+            if (Appuser != null)
             {
-                _userManager.AddToRoleAsync(model, item.ToString()).GetAwaiter().GetResult();
+                foreach (var item in applicationUserViewModel.Roles)
+                {
+                    _userManager.AddToRoleAsync(model, item.ToString()).GetAwaiter().GetResult();
+                }
             }
+
+
+        }
+        public void InsertMultiple(List<ApplicationUserViewModel> multipleApplicationUserViewModel)
+        {
+            foreach (var viewModel in multipleApplicationUserViewModel)
+            {
+                if (viewModel.Email == null || viewModel.Password == null)
+                {
+                    continue;
+                }
+                var model = new ApplicationUserViewModel().ConvertViewModel(viewModel);
+                _userManager.CreateAsync(model, viewModel.Password).GetAwaiter().GetResult();
+                var Appuser = _context.ApplicationUsers.FirstOrDefault(x => x.Email == model.Email);
+                if (Appuser != null)
+                {
+                    foreach (var item in viewModel.Roles)
+                    {
+                        _userManager.AddToRoleAsync(model, item.ToString()).GetAwaiter().GetResult();
+                    }
+                }
+                
+            }
+            
 
             
         }
@@ -112,17 +143,9 @@ namespace Collections.Services
         private List<ApplicationUserViewModel> ConvertToViewModelList(List<ApplicationUser> modelList)
         {
             
-            return modelList.Select(x => new ApplicationUserViewModel(x, GetApplicationUserRoles(x))).ToList();
+            return modelList.Select(x => new ApplicationUserViewModel(x, _userManager.GetRolesAsync(x).Result.ToList())).ToList();
         }
 
-        private IEnumerable<ApplicationRoleViewModel> GetApplicationUserRoles(ApplicationUser applicationUser)
-        {
-            var modelRoles = new List<ApplicationRoleViewModel>();
-            foreach (var roleName in _userManager.GetRolesAsync(applicationUser).Result.ToList())
-            {
-                modelRoles.Add(_applicationRoleService.GetByName(roleName));
-            }
-            return modelRoles;
-        }
+
     }
 }

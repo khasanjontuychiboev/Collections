@@ -13,20 +13,22 @@ namespace Collections.ViewModel
         public string Id { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
+        public string Password { get; set; }
 
-        public IEnumerable<ApplicationRoleViewModel> ApplicationRoleViewModels { get; set; }
+        public List<string> Roles { get; set; }
 
         public ApplicationUserViewModel()
         {
 
         }
 
-        public ApplicationUserViewModel(ApplicationUser applicationUser, IEnumerable<ApplicationRoleViewModel> applicationRoleViewModels)
+        public ApplicationUserViewModel(ApplicationUser applicationUser, List<string> roles)
         {
             Id = applicationUser.Id;
             UserName= applicationUser.UserName;
             Email= applicationUser.Email;
-            ApplicationRoleViewModels= applicationRoleViewModels;
+            Password = applicationUser.PasswordHash;
+            Roles= roles;
            
         }
 
@@ -34,9 +36,8 @@ namespace Collections.ViewModel
         {
             return new ApplicationUser
             {
-                Id = applicationUserViewModel.Id,
-                UserName = applicationUserViewModel.UserName,
-                Email = applicationUserViewModel.Email,
+                UserName = applicationUserViewModel.Email,
+                Email = applicationUserViewModel.Email
 
             };
         }

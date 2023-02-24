@@ -1,0 +1,12 @@
+﻿@model Collections.ViewModel.ApplicationUserViewModel
+
+<p>@Model.UserName</p>
+<p>@Model.Email</p>
+<p>@Model.Password</p>
+@if (Model.Roles != null)
+{
+    foreach (var role in Model.Roles)
+    {
+        <button class="btn btn-sm btn-success">@role</button>
+    }
+}

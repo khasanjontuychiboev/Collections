@@ -16,6 +16,7 @@ namespace Collections.Services
 
         void Update(ApplicationUserViewModel model);
         void Insert(ApplicationUserViewModel model);
+        void InsertMultiple(List<ApplicationUserViewModel> modelList);
         void Delete(string id);
         IEnumerable<ApplicationUserViewModel> GetAll();
     }
