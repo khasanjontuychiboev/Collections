@@ -29,7 +29,8 @@ namespace Collections.Web.Controllers
         [HttpGet]
         public IActionResult Details(string id)
         {
-            return View(_applicationUserService.GetById(id));
+            var model = _applicationUserService.GetById(id);
+            return View(model);
         }
 
         [HttpGet]

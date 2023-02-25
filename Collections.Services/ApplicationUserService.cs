@@ -88,7 +88,12 @@ namespace Collections.Services
         public ApplicationUserViewModel GetById(string Id)
         {
             var model = _context.ApplicationUsers.Find(Id);
-            var vm = new ApplicationUserViewModel(model, _userManager.GetRolesAsync(model).Result.ToList());
+            var vm = new ApplicationUserViewModel();
+            if (model != null)
+            {
+                vm = new ApplicationUserViewModel(model, _userManager.GetRolesAsync(model).Result.ToList());
+
+            }
             return vm;
 
         }
